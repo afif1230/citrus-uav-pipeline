@@ -33,20 +33,13 @@ A complete pipeline for automated citrus orchard monitoring using consumer-grade
 
 ## Installation
 
-### 1. Clone the Repository
+### 1. Install Libraries
 
-```bash
-git clone https://github.com/afif1230/citrus-uav-pipeline.git
-cd citrus-uav-pipeline
+```python
+pip install ultralytics torch torchvision timm opencv-python numpy pandas scipy scikit-learn matplotlib seaborn tqdm pillow exifread
 ```
 
-### 2. Install Dependencies
-
-```bash
-!pip install -r requirements.txt
-```
-
-### 3. Download Models and Datasets
+### 2. Download Models and Datasets
 
 Download all models and datasets from Google Drive:
 
