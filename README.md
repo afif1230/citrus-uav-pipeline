@@ -36,7 +36,7 @@ A complete pipeline for automated citrus orchard monitoring using consumer-grade
 ### 1. Install Libraries
 
 ```python
-pip install ultralytics torch torchvision timm opencv-python numpy pandas scipy scikit-learn matplotlib seaborn tqdm pillow exifread
+!pip install ultralytics torch torchvision timm opencv-python numpy pandas scipy scikit-learn matplotlib seaborn tqdm pillow exifread
 ```
 
 ### 2. Download Models and Datasets
