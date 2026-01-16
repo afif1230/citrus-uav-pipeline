@@ -106,14 +106,14 @@ citrus-uav-pipeline/
 
 ## Usage
 
-> **Important:** Set the `BASE_DIR` variable at the top of each script to match your local folder path.
+> ⚠️ **Important:** Each notebook contains multiple code cells. You must set the `BASE_DIR` variable in **every code cell you run** to match your local folder path.
 
 ### 1. Tree Detection
 
 Open `Object Detection Pipeline/Object_detection_pipeline.ipynb`
 ```python
 # ==================== CONFIGURATION ====================
-BASE_DIR = "Object Detection Pipeline"  # Update this path
+BASE_DIR = "Object Detection Pipeline"  # Update this path in every cell
 ```
 
 **Included scripts:**
@@ -131,7 +131,7 @@ BASE_DIR = "Object Detection Pipeline"  # Update this path
 Open `Geolocation/Geolocation_pipeline.ipynb`
 ```python
 # ==================== CONFIGURATION ====================
-BASE_DIR = "Geolocation"  # Update this path
+BASE_DIR = "Geolocation"  # Update this path in every cell
 ```
 
 **Features:**
@@ -146,7 +146,7 @@ BASE_DIR = "Geolocation"  # Update this path
 Open `HLB Health Classification/Health_Monitoring.ipynb`
 ```python
 # ==================== CONFIGURATION ====================
-BASE_DIR = "HLB Health Classification"  # Update this path
+BASE_DIR = "HLB Health Classification"  # Update this path in every cell
 ```
 
 **Included scripts:**
@@ -166,7 +166,7 @@ BASE_DIR = "HLB Health Classification"  # Update this path
 | Valid | 34 | 640×640 | YOLO format |
 | Test | 59 | 640×640 | YOLO format |
 
-For the complete MAPIR dataset (including OCN and RGN bands): [MAPIR Open Dataset](https://www.mapir.camera/pages/open-dataset)
+For the complete MAPIR dataset (including OCN and RGN bands): [Orange Orchard - MAPIR CAMERA](https://www.mapir.camera/pages/orange-orchard)
 
 ---
 
@@ -191,7 +191,10 @@ For the complete MAPIR dataset (including OCN and RGN bands): [MAPIR Open Datase
 - `USDA Florida orthomosaics+CSV mapping (unprocessed)/` — Original orthomosaic images and health score CSVs
 
 **Original Source:**
-- For flyover closeup images, visit: [USDA Ag Data Commons](https://doi.org/10.15482/USDA.ADC/26946823)
+
+> R. P. Niedz and K. D. Bowman, "Image dataset: UAV images and ground data of one 'Bingo' mandarin and two 'Valencia' orange rootstock trials conducted in Florida," *Data in Brief*, vol. 58, p. 111206, 2025.
+
+For flyover closeup images, visit the original dataset.
 
 ---
 
@@ -238,6 +241,8 @@ Each pair folder contains:
 ---
 
 ## Citation
+
+If you use this code in your research, please cite:
 ```bibtex
 @inproceedings{elbsat2026citrus,
   title={Unified RGB-UAV Pipeline for Citrus Tree Detection, Geotagging, and HLB Health Assessment},
@@ -266,7 +271,7 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 ## Acknowledgments
 
-- [MAPIR](https://www.mapir.camera/pages/open-dataset) for the open citrus orchard dataset
-- [USDA Ag Data Commons](https://doi.org/10.15482/USDA.ADC/26946823) for the Florida rootstock trials dataset
+- [MAPIR](https://www.mapir.camera/pages/orange-orchard) for the open citrus orchard dataset
+- R. P. Niedz and K. D. Bowman for the [USDA Florida rootstock trials dataset](https://doi.org/10.1016/j.dib.2024.111206)
 - [Ultralytics](https://github.com/ultralytics/ultralytics) for YOLOv11 implementation
 - [timm](https://github.com/huggingface/pytorch-image-models) for Swin Transformer implementation
