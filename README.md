@@ -40,32 +40,61 @@ pip install ultralytics torch torchvision timm opencv-python numpy scipy scikit-
 
 ## Download Models & Data
 
-Download models and datasets from Google Drive:
+Download the complete pipeline from Google Drive:
 
 📁 **[Google Drive Link](DRIVE_LINK_PLACEHOLDER)**
 
-After downloading, your folder structure should look like:
+---
+
+## Folder Structure
 ```
 citrus-uav-pipeline/
 │
 ├── Object Detection Pipeline/
 │   ├── Models/
 │   │   ├── orange_tree_model_350images/
+│   │   │   └── tree_training/weights/best.pt
 │   │   └── orange_tree_model_350images_greyscale/
-│   ├── train/
-│   ├── valid/
-│   ├── test/
+│   │       └── tree_training/weights/best.pt
+│   ├── train/                              # 310 images (640x640) + YOLO labels
+│   ├── valid/                              # 34 images + YOLO labels
+│   ├── test/                               # 59 images + YOLO labels
 │   ├── data.yaml
-│   └── Object_detection_pipeline.ipynb
+│   ├── Object_detection_pipeline.ipynb
+│   ├── yolo11l-seg.pt                      # Pretrained weights
+│   ├── yolo11l.pt
+│   └── yolo11n.pt
 │
 ├── HLB Health Classification/
 │   ├── Tree Rows 5 to 16-Processed/
+│   │   ├── Rows R5-R16_Valencia trial_labeled.png
+│   │   ├── Rows R5-R16_Valencia trial_labeled.txt
+│   │   ├── Rows R5-R16_Valencia trial_labeled_mapping.txt
+│   │   └── _annotations.coco.json
 │   ├── Tree Rows 17 to 28-Processed/
+│   │   ├── train/
+│   │   ├── data.yaml
+│   │   ├── canopy_index_from_coco17-28.csv
+│   │   ├── Rows-R17-R28_Valencia-trial_labeled.jpg
+│   │   └── _annotations.coco.json
+│   ├── USDA Florida orthomosaics+CSV mapping (unprocessed)/
+│   ├── Health_Monitoring.ipynb
 │   ├── swin_3specialists_FINAL.pth
-│   └── Health_Monitoring.ipynb
+│   ├── yolo11l-seg.pt
+│   ├── yolo11l.pt
+│   └── yolo11n.pt
 │
 ├── Geolocation/
 │   ├── Pairs + EXIF Data/
+│   │   ├── pair1/
+│   │   │   ├── DJI_..._other.JPG
+│   │   │   ├── DJI_..._other.txt
+│   │   │   ├── DJI_..._ref.JPG
+│   │   │   └── DJI_..._ref.txt
+│   │   ├── pair2/
+│   │   ├── pair3/
+│   │   ├── pair4/
+│   │   └── GIMBAL_SUMMARY_20251002_212839.txt
 │   └── Geolocation_pipeline.ipynb
 │
 ├── README.md
@@ -77,77 +106,134 @@ citrus-uav-pipeline/
 
 ## Usage
 
+> **Important:** Set the `BASE_DIR` variable at the top of each script to match your local folder path.
+
 ### 1. Tree Detection
 
 Open `Object Detection Pipeline/Object_detection_pipeline.ipynb`
-
-Set your base directory:
 ```python
 # ==================== CONFIGURATION ====================
-BASE_DIR = "Object Detection Pipeline"
+BASE_DIR = "Object Detection Pipeline"  # Update this path
 ```
 
-**Available scripts:**
+**Included scripts:**
 - Training
 - RGB Model Evaluation
 - Greyscale Model Evaluation  
 - Brightness Normalized Evaluation
 - Ensemble Evaluation
-- Inference Examples
+- Inference Examples (RGB, Greyscale, Brightness, Ensemble)
 
 ---
 
 ### 2. GPS Geotagging
 
 Open `Geolocation/Geolocation_pipeline.ipynb`
-
-Set your base directory:
 ```python
 # ==================== CONFIGURATION ====================
-BASE_DIR = "Geolocation"
+BASE_DIR = "Geolocation"  # Update this path
 ```
 
 **Features:**
 - Gimbal-based north alignment
-- GPS coordinate projection
-- Validation visualization
+- GPS coordinate projection from pixel coordinates
+- Validation visualization with error metrics
 
 ---
 
 ### 3. Health Classification
 
 Open `HLB Health Classification/Health_Monitoring.ipynb`
-
-Set your base directory:
 ```python
 # ==================== CONFIGURATION ====================
-BASE_DIR = "HLB Health Classification"
+BASE_DIR = "HLB Health Classification"  # Update this path
 ```
 
-**Available scripts:**
-- Data extraction from USDA dataset
-- Test set evaluation
+**Included scripts:**
+- Data extraction from USDA orthomosaics
+- Test set evaluation with confusion matrix
 - Inference examples
+
+---
+
+## Data Description
+
+### Object Detection Dataset
+
+| Split | Images | Resolution | Labels |
+|-------|--------|------------|--------|
+| Train | 310 | 640×640 | YOLO format |
+| Valid | 34 | 640×640 | YOLO format |
+| Test | 59 | 640×640 | YOLO format |
+
+For the complete MAPIR dataset (including OCN and RGN bands): [MAPIR Open Dataset](https://www.mapir.camera/pages/open-dataset)
+
+---
+
+### Health Classification Dataset
+
+**Processed Data (included):**
+
+| Folder | Contents |
+|--------|----------|
+| `Tree Rows 5 to 16-Processed/` | Orthomosaic + YOLO labels + mapping file |
+| `Tree Rows 17 to 28-Processed/` | Orthomosaic + YOLO labels + canopy index CSV |
+
+**Label Format:** `R##_T##_H#`
+
+| Code | Meaning | Range |
+|------|---------|-------|
+| R## | Row number | 5-28 |
+| T## | Tree number in row | 1 (bottom) to 55 (top) |
+| H# | Health score | 0-5 (0 = not a tree) |
+
+**Unprocessed Data (included):**
+- `USDA Florida orthomosaics+CSV mapping (unprocessed)/` — Original orthomosaic images and health score CSVs
+
+**Original Source:**
+- For flyover closeup images, visit: [USDA Ag Data Commons](https://doi.org/10.15482/USDA.ADC/26946823)
+
+---
+
+### GPS Geotagging Dataset
+
+**Included in `Pairs + EXIF Data/`:**
+
+Each pair folder contains:
+| File | Description |
+|------|-------------|
+| `DJI_..._ref.JPG` | Reference image (tree centered) |
+| `DJI_..._ref.txt` | YOLO label for reference image |
+| `DJI_..._other.JPG` | Other image (tree off-center) |
+| `DJI_..._other.txt` | YOLO label for other image |
+
+**EXIF Data:**
+- `GIMBAL_SUMMARY_20251002_212839.txt` — Contains gimbal yaw angles for north alignment
+
+**Camera:** DJI Mini 4 Pro | **FOV:** 82.1° | **Altitude:** 100m AGL
 
 ---
 
 ## Model Weights
 
-| Model | File | Size |
-|-------|------|------|
-| RGB Detection | `orange_tree_model_350images/tree_training/weights/best.pt` | ~90 MB |
-| Greyscale Detection | `orange_tree_model_350images_greyscale/tree_training/weights/best.pt` | ~90 MB |
-| Health Classifier | `swin_3specialists_FINAL.pth` | ~90 MB |
+| Model | Location | Size |
+|-------|----------|------|
+| RGB Detection | `Object Detection Pipeline/Models/orange_tree_model_350images/tree_training/weights/best.pt` | ~90 MB |
+| Greyscale Detection | `Object Detection Pipeline/Models/orange_tree_model_350images_greyscale/tree_training/weights/best.pt` | ~90 MB |
+| Health Classifier | `HLB Health Classification/swin_3specialists_FINAL.pth` | ~90 MB |
 
----
+**Pretrained YOLO weights (for training from scratch):**
+- `yolo11l-seg.pt` — YOLOv11-Large segmentation
+- `yolo11l.pt` — YOLOv11-Large detection
+- `yolo11n.pt` — YOLOv11-Nano
 
-## Datasets
-
-| Dataset | Source | Use |
-|---------|--------|-----|
-| MAPIR Citrus | [MAPIR Open Dataset](https://www.mapir.camera/pages/open-dataset) | Tree Detection |
-| USDA Florida Rootstock | [USDA Ag Data Commons](https://doi.org/10.15482/USDA.ADC/26946823) | Health Classification |
-| AUB Validation | Collected | GPS Geotagging |
+**Health Classifier Training Notes:**
+- Architecture: 3× Swin-Tiny binary specialists
+- BCE pos_weight values (tuned via grid search):
+  - Poor specialist: 3.0
+  - Moderate specialist: 0.5
+  - Good specialist: 5.3
+- Inference uses argmax (no additional weighting)
 
 ---
 
@@ -175,3 +261,12 @@ BASE_DIR = "HLB Health Classification"
 ## License
 
 MIT License — see [LICENSE](LICENSE) for details.
+
+---
+
+## Acknowledgments
+
+- [MAPIR](https://www.mapir.camera/pages/open-dataset) for the open citrus orchard dataset
+- [USDA Ag Data Commons](https://doi.org/10.15482/USDA.ADC/26946823) for the Florida rootstock trials dataset
+- [Ultralytics](https://github.com/ultralytics/ultralytics) for YOLOv11 implementation
+- [timm](https://github.com/huggingface/pytorch-image-models) for Swin Transformer implementation
