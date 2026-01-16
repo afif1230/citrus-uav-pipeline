@@ -4,16 +4,16 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/Python-3.8+-green.svg)](https://www.python.org/downloads/)
 
-This repository contains the official implementation of our IGARSS 2026 paper: **"Unified RGB-UAV Pipeline for Citrus Tree Detection, Geotagging, and HLB Health Assessment"**
+Official implementation of our IGARSS 2026 paper: **"Unified RGB-UAV Pipeline for Citrus Tree Detection, Geotagging, and HLB Health Assessment"**
 
 ---
 
 ## Overview
 
-A complete pipeline for automated citrus orchard monitoring using consumer-grade UAV RGB imagery. The system performs:
+A complete pipeline for automated citrus orchard monitoring using consumer-grade UAV RGB imagery:
 
 1. **Tree Detection** — YOLOv11-Large ensemble (RGB + Brightness-Normalized + Greyscale)
-2. **GPS Geotagging** — Direct coordinate projection without orthomosaic generation
+2. **GPS Geotagging** — Direct coordinate projection using gimbal data
 3. **Health Classification** — Three-specialist Swin Transformer ensemble (Poor/Moderate/Good)
 
 ---
@@ -32,69 +32,45 @@ A complete pipeline for automated citrus orchard monitoring using consumer-grade
 ---
 
 ## Installation
-
-### 1. Install Libraries
-
-```python
-!pip install ultralytics torch torchvision timm opencv-python numpy pandas scipy scikit-learn matplotlib seaborn tqdm pillow exifread
-```
-
-### 2. Download Models and Datasets
-
-Download all models and datasets from Google Drive:
-
-📁 **[Download Link](DRIVE_LINK_PLACEHOLDER)**
-
-After downloading, your folder structure should look like:
-
-```
-citrus-uav-pipeline/
-├── models/
-│   ├── detection/
-│   │   ├── rgb_model.pt
-│   │   └── greyscale_model.pt
-│   └── health/
-│       ├── poor_specialist.pth
-│       ├── moderate_specialist.pth
-│       └── good_specialist.pth
-├── data/
-│   ├── MAPIR_detection/
-│   ├── USDA_health/
-│   └── AUB_gps_validation/
-└── notebooks/
-    └── ...
+```bash
+pip install ultralytics torch torchvision timm opencv-python numpy scipy scikit-learn pillow matplotlib pyyaml
 ```
 
 ---
 
-## Project Structure
+## Download Models & Data
 
+Download models and datasets from Google Drive:
+
+📁 **[Google Drive Link](DRIVE_LINK_PLACEHOLDER)**
+
+After downloading, your folder structure should look like:
 ```
 citrus-uav-pipeline/
 │
+├── Object Detection Pipeline/
+│   ├── Models/
+│   │   ├── orange_tree_model_350images/
+│   │   └── orange_tree_model_350images_greyscale/
+│   ├── train/
+│   ├── valid/
+│   ├── test/
+│   ├── data.yaml
+│   └── Object_detection_pipeline.ipynb
+│
+├── HLB Health Classification/
+│   ├── Tree Rows 5 to 16-Processed/
+│   ├── Tree Rows 17 to 28-Processed/
+│   ├── swin_3specialists_FINAL.pth
+│   └── Health_Monitoring.ipynb
+│
+├── Geolocation/
+│   ├── Pairs + EXIF Data/
+│   └── Geolocation_pipeline.ipynb
+│
 ├── README.md
 ├── requirements.txt
-├── LICENSE
-│
-├── notebooks/
-│   ├── 1_detection.ipynb           # Tree detection pipeline
-│   ├── 2_gps_geotagging.ipynb      # GPS coordinate transformation
-│   ├── 3_health_classification.ipynb   # Health assessment
-│   └── 4_full_pipeline.ipynb       # End-to-end demo
-│
-├── models/                          # Download from Google Drive
-│   ├── detection/
-│   └── health/
-│
-├── data/                            # Download from Google Drive
-│   ├── MAPIR_detection/
-│   ├── USDA_health/
-│   └── AUB_gps_validation/
-│
-├── figures/
-│   └── pipeline.png
-│
-└── outputs/                         # Generated results
+└── LICENSE
 ```
 
 ---
@@ -103,175 +79,79 @@ citrus-uav-pipeline/
 
 ### 1. Tree Detection
 
-Open `notebooks/1_detection.ipynb`
+Open `Object Detection Pipeline/Object_detection_pipeline.ipynb`
 
-Set your paths in the configuration cell:
-
+Set your base directory:
 ```python
-# === CONFIGURATION ===
-RGB_MODEL_PATH = "models/detection/rgb_model.pt"
-GREY_MODEL_PATH = "models/detection/greyscale_model.pt"
-IMAGE_PATH = "data/MAPIR_detection/test/your_image.jpg"
-OUTPUT_DIR = "outputs/detection/"
+# ==================== CONFIGURATION ====================
+BASE_DIR = "Object Detection Pipeline"
 ```
 
-Run all cells. Outputs:
-- Annotated images with bounding boxes
-- Detection coordinates (CSV)
+**Available scripts:**
+- Training
+- RGB Model Evaluation
+- Greyscale Model Evaluation  
+- Brightness Normalized Evaluation
+- Ensemble Evaluation
+- Inference Examples
 
 ---
 
 ### 2. GPS Geotagging
 
-Open `notebooks/2_gps_geotagging.ipynb`
+Open `Geolocation/Geolocation_pipeline.ipynb`
 
-Set your paths:
-
+Set your base directory:
 ```python
-# === CONFIGURATION ===
-IMAGE_PATH = "data/AUB_gps_validation/pair1/image.jpg"
-DETECTIONS_PATH = "outputs/detection/detections.csv"
-OUTPUT_PATH = "outputs/gps/tree_coordinates.csv"
-
-# Camera parameters (DJI Mini 4 Pro defaults)
-FOV_DEGREES = 82.1
-ALTITUDE_M = 100
+# ==================== CONFIGURATION ====================
+BASE_DIR = "Geolocation"
 ```
 
-Run all cells. Outputs:
-- GPS coordinates for each detected tree (CSV)
-- Validation error metrics
+**Features:**
+- Gimbal-based north alignment
+- GPS coordinate projection
+- Validation visualization
 
 ---
 
 ### 3. Health Classification
 
-Open `notebooks/3_health_classification.ipynb`
+Open `HLB Health Classification/Health_Monitoring.ipynb`
 
-Set your paths:
-
+Set your base directory:
 ```python
-# === CONFIGURATION ===
-MODEL_DIR = "models/health/"
-TREE_CROPS_DIR = "data/USDA_health/test/"
-OUTPUT_PATH = "outputs/health/predictions.csv"
+# ==================== CONFIGURATION ====================
+BASE_DIR = "HLB Health Classification"
 ```
 
-Run all cells. Outputs:
-- Health predictions for each tree (Poor/Moderate/Good)
-- Confidence scores
-- Confusion matrix
-
----
-
-### 4. Full Pipeline (End-to-End)
-
-Open `notebooks/4_full_pipeline.ipynb`
-
-Set your paths:
-
-```python
-# === CONFIGURATION ===
-# Detection
-RGB_MODEL_PATH = "models/detection/rgb_model.pt"
-GREY_MODEL_PATH = "models/detection/greyscale_model.pt"
-
-# Health
-HEALTH_MODEL_DIR = "models/health/"
-
-# Input/Output
-INPUT_IMAGE = "data/your_orchard_image.jpg"
-OUTPUT_DIR = "outputs/full_pipeline/"
-
-# Camera parameters
-FOV_DEGREES = 82.1
-ALTITUDE_M = 100
-```
-
-Run all cells. Outputs:
-- Detected trees with GPS coordinates and health scores
-- Orchard health map visualization
-
----
-
-## Training
-
-### Train Detection Model
-
-Open `notebooks/train_detection.ipynb`
-
-```python
-# === CONFIGURATION ===
-TRAIN_DATA = "data/MAPIR_detection/train/"
-VAL_DATA = "data/MAPIR_detection/val/"
-OUTPUT_DIR = "models/detection/"
-
-# Training parameters
-EPOCHS = 200
-BATCH_SIZE = 8
-IMG_SIZE = 640
-PATIENCE = 50  # Early stopping
-```
-
-### Train Health Classifier
-
-Open `notebooks/train_health.ipynb`
-
-```python
-# === CONFIGURATION ===
-TRAIN_DATA = "data/USDA_health/train/"
-VAL_DATA = "data/USDA_health/val/"
-OUTPUT_DIR = "models/health/"
-
-# Training parameters
-EPOCHS = 150
-BATCH_SIZE = 32
-LEARNING_RATE = 1e-4
-PATIENCE = 25  # Early stopping
-```
-
----
-
-## Datasets
-
-### 1. MAPIR Detection Dataset
-
-- **Source:** [MAPIR Open Dataset](https://www.mapir.camera/pages/open-dataset)
-- **Contents:** 403 RGB images of citrus orchard at 120m AGL
-- **Split:** 344 train/val, 59 test
-- **Annotations:** YOLO format bounding boxes
-
-### 2. USDA Health Dataset
-
-- **Source:** [USDA Ag Data Commons](https://doi.org/10.15482/USDA.ADC/26946823)
-- **Contents:** ~1,500 citrus trees with expert health ratings (1-5 scale)
-- **Location:** Fort Pierce, FL (HLB-endemic region)
-- **Classes:** Poor (1-2), Moderate (3), Good (4-5)
-
-### 3. AUB GPS Validation Dataset
-
-- **Contents:** 4 image pairs for geotagging validation
-- **Equipment:** DJI Mini 4 Pro (82.1° FOV)
-- **Altitude:** 100m AGL
+**Available scripts:**
+- Data extraction from USDA dataset
+- Test set evaluation
+- Inference examples
 
 ---
 
 ## Model Weights
 
-| Model | Architecture | Size | Download |
-|-------|--------------|------|----------|
-| RGB Detection | YOLOv11-Large | ~90 MB | [Google Drive](DRIVE_LINK_PLACEHOLDER) |
-| Greyscale Detection | YOLOv11-Large | ~90 MB | [Google Drive](DRIVE_LINK_PLACEHOLDER) |
-| Poor Specialist | Swin-Tiny | ~30 MB | [Google Drive](DRIVE_LINK_PLACEHOLDER) |
-| Moderate Specialist | Swin-Tiny | ~30 MB | [Google Drive](DRIVE_LINK_PLACEHOLDER) |
-| Good Specialist | Swin-Tiny | ~30 MB | [Google Drive](DRIVE_LINK_PLACEHOLDER) |
+| Model | File | Size |
+|-------|------|------|
+| RGB Detection | `orange_tree_model_350images/tree_training/weights/best.pt` | ~90 MB |
+| Greyscale Detection | `orange_tree_model_350images_greyscale/tree_training/weights/best.pt` | ~90 MB |
+| Health Classifier | `swin_3specialists_FINAL.pth` | ~90 MB |
+
+---
+
+## Datasets
+
+| Dataset | Source | Use |
+|---------|--------|-----|
+| MAPIR Citrus | [MAPIR Open Dataset](https://www.mapir.camera/pages/open-dataset) | Tree Detection |
+| USDA Florida Rootstock | [USDA Ag Data Commons](https://doi.org/10.15482/USDA.ADC/26946823) | Health Classification |
+| AUB Validation | Collected | GPS Geotagging |
 
 ---
 
 ## Citation
-
-If you use this code in your research, please cite:
-
 ```bibtex
 @inproceedings{elbsat2026citrus,
   title={Unified RGB-UAV Pipeline for Citrus Tree Detection, Geotagging, and HLB Health Assessment},
@@ -286,21 +166,12 @@ If you use this code in your research, please cite:
 
 ## Authors
 
-- **Afif El Bsat** — American University of Beirut — ame127@mail.aub.edu
-- **Dr. Ammar Mohanna** — American University of Beirut
+- **Afif El Bsat** — American University of Beirut
+- **Dr. Ammar Mohanna** — American University of Beirut  
 - **Dr. Bilal Kaddouh** — American University of Beirut
 
 ---
 
 ## License
 
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
-
----
-
-## Acknowledgments
-
-- MAPIR for the open citrus orchard dataset
-- USDA Ag Data Commons for the Florida rootstock trials dataset
-- Ultralytics for YOLOv11 implementation
-- timm library for Swin Transformer implementation
+MIT License — see [LICENSE](LICENSE) for details.
