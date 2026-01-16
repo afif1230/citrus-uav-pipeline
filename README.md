@@ -22,7 +22,7 @@ A complete pipeline for automated citrus orchard monitoring using consumer-grade
 
 | Component | Metric | Value |
 |-----------|--------|-------|
-| **Detection** | Precision | 95.1% |
+| **Detection- Greyscale Model** | Precision | 95.1% |
 | | Recall | 93.3% |
 | | mAP@50 | 93.1% |
 | **GPS Geotagging** | Mean Error | 3.2 m |
