@@ -39,9 +39,7 @@ pip install ultralytics torch torchvision timm opencv-python numpy scipy scikit-
 
 Download the complete pipeline from Google Drive:
 
-📁 **[Google Drive Link](DRIVE_LINK_PLACEHOLDER)**
-
----
+📁 **[Google Drive Link](https://drive.google.com/drive/folders/1LJl63Lm9rNaNczlUzEI_x7zvZsnFcp8V?usp=drive_link)**
 
 ## Folder Structure
 ```
