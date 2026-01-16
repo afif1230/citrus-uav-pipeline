@@ -1,10 +1,9 @@
 # Unified RGB-UAV Pipeline for Citrus Tree Detection, Geotagging, and HLB Health Assessment
 
-[![Paper](https://img.shields.io/badge/Paper-IGARSS%202026-blue)](PAPER_LINK)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/Python-3.8+-green.svg)](https://www.python.org/downloads/)
 
-Official implementation of our IGARSS 2026 paper: **"Unified RGB-UAV Pipeline for Citrus Tree Detection, Geotagging, and HLB Health Assessment"**
+Official implementation for the **2026 IEEE International Geoscience and Remote Sensing Symposium (IGARSS)** paper.
 
 ---
 
