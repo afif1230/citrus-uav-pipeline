@@ -4,7 +4,10 @@
 
 Official implementation for the **2026 IEEE International Geoscience and Remote Sensing Symposium (IGARSS)** paper.
 
+> **Disclaimer:** This is experimental research code provided "as is" without any warranties. Users assume full responsibility for its use. Not intended for production or critical agricultural decisions without independent validation.
+
 ---
+
 ## Overview
 
 A complete pipeline for automated citrus orchard monitoring using consumer-grade UAV RGB imagery:
